@@ -1,0 +1,10 @@
+{
+  "name": "perf",
+  "description": "tw.com website performance tests",
+  "dependencies": {
+    "http-benchmark": "0.2.4"
+  },
+  "scripts": {
+    "start": "coffee insights_performance_test.coffee"
+  }
+}
