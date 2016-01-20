@@ -5,6 +5,6 @@
     "http-benchmark": "0.2.4"
   },
   "scripts": {
-    "start": "coffee insights_performance_test.coffee"
+    "start": "node insights_performance_test.js"
   }
 }
