@@ -5,6 +5,7 @@
     "http-benchmark": "0.2.4"
   },
   "scripts": {
-    "start": "node insights_performance_test.js"
+    "start": "node insights_performance_test.js > results.log",
+    "report": "node report_on_results.js results.log"
   }
 }
