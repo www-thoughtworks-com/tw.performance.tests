@@ -8,8 +8,9 @@
   },
   "scripts": {
     "report": "node consistent_load.js",
-    "sync": "sh sync.sh",
+    "syncDown": "sh sync.sh --down",
+    "syncUp": "sh sync.sh --up",
     "graph": "node graph_results.js",
-    "all": "npm run report && npm run sync && npm run graph"
+    "all": "npm run syncDown && npm run report && npm run graph && npm run syncUp"
   }
 }
