@@ -8,7 +8,7 @@
   },
   "scripts": {
     "report": "node consistent_load.js",
-    "sync": "./sync.sh",
+    "sync": "sh sync.sh",
     "graph": "node graph_results.js",
     "all": "npm run report && npm run sync && npm run graph"
   }
