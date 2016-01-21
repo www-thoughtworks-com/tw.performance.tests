@@ -7,9 +7,9 @@
     "mkdirp": "^0.5.1"
   },
   "scripts": {
-    "report": "node insights_performance_test.js",
+    "report": "node consistent_load.js",
     "sync": "./sync.sh",
     "graph": "node graph_results.js",
-    "all": "./do-it-all.sh"
+    "all": "npm run report && npm run sync && npm run graph"
   }
 }

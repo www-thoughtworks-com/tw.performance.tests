@@ -20,7 +20,7 @@ console.log('Starting performance tests...');
 for(var x = 0; x < paths.length; x++) {
   var path = paths[x];
   var cp = require('child_process');
-  var result = cp.execSync('/usr/local/bin/node ' + __dirname + '/test_url.js ' + path); 
+  var result = cp.execSync('/usr/local/bin/node ' + __dirname + '/consistent_load_url.js ' + path); 
   result = result.toString().split("\n");
   result = result[result.length -2];
   result = result.substring(3);
