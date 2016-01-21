@@ -1,24 +1,51 @@
 var fs = require('fs')
 var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 1000);
 var mkdirp = require('mkdirp');
+var maxResponseTime = 3500;
 
 var paths = [
-  '/',
-  '/insights',
-  '/insights/technology',
-  '/radar',
-  '/radar/platforms',
-  '/careers',
-  '/events',
-  '/about-us',
-  '/products'
+  ['/', maxResponseTime],
+  ['/insights', maxResponseTime],
+  ['/insights/technology', maxResponseTime],
+  ['/radar', maxResponseTime],
+  ['/radar/platforms', maxResponseTime],
+  ['/careers', maxResponseTime],
+  ['/events', 6000], // Events seems to average around 5500
+  ['/about-us', maxResponseTime],
+  ['/products', maxResponseTime]
 ];
 
 var results = [];
 console.log('Starting performance tests...');
 
+var raiseError = function(item, msg) {
+  console.error('ERROR: ' + msg);
+  console.error('Target URL: ' + item.label);
+	process.exit(1);
+}
+
+var validateStatusCodes = function(item, msg) {
+  var array = Object.keys(item.statuses);
+	var index = array.indexOf('200');
+	if (index > -1) {
+  	array.splice(index, 1);
+	}
+
+	if(array.length > 0) {
+		// unexpected status codes!
+    raiseError(item, 'Unexpected status codes (' + array.join(', ') + ')')
+	}
+};
+
+var validateMaximumAverageResponseTime = function(item, responseTime) {
+  if(parseFloat(item.avg) > parseFloat(responseTime)) {
+    raiseError(item, 'Average response time (' + item.avg.toString() + 'ms) exceeded maximum response time (' + responseTime.toString() + 'ms)');
+  }
+};
+
 for(var x = 0; x < paths.length; x++) {
-  var path = paths[x];
+  var path = paths[x][0];
+  var responseTime = paths[x][1];
   var cp = require('child_process');
   var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + path, { env: process.env }); 
   result = result.toString().split("\n");
@@ -27,6 +54,10 @@ for(var x = 0; x < paths.length; x++) {
   result = result.substring(0, result.length -3);
   result = JSON.parse(result);
   console.log(result);
+
+  validateStatusCodes(result);
+  validateMaximumAverageResponseTime(result, responseTime);
+
   results.push(result);
 }
 
@@ -39,21 +70,6 @@ var averageSorter = function (a, b) {
 
 var average = results.sort(averageSorter);
 var max = results.sort(maxSorter);
-
-average.forEach(function(item) {
-  var array = Object.keys(item.statuses);
-	var index = array.indexOf('200');
-	if (index > -1) {
-  	array.splice(index, 1);
-	}
-
-	if(array.length > 0) {
-		// unexpected status codes!
-		console.error('ERROR: Unexpected status codes "' + array.join(', ') + '"');
-		console.error('Target URL: ' + item.label);
-		process.exit(1);
-	}
-});
 
 console.log('Saving results to file system...');
 mkdirp.sync('./results/average');

@@ -5,8 +5,8 @@ var path = process.argv[2];
 
 new Scenario()
   .get(base_url + path)
-  .concurrency(3)
-  .actions(50)
+  .concurrency(1)
+  .actions(1)
   .throttle(1)
   .report()
   .start();
