@@ -1,3 +1,9 @@
 node_modules/
 .idea
 results.log
+allData.js
+*average.json
+*max.json
+results/
+npm-debug.log
+*.swp

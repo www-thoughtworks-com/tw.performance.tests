@@ -5,16 +5,13 @@ var base_url = 'http://perf.webteam.thoughtworks.com';
 scenario = new Scenario()
 
 var paths = [
+  '/',
   '/insights',
   '/insights/technology',
-  '/insights',
   '/radar',
   '/radar/platforms',
-  '/radar',
-  '/',
   '/careers',
   '/events',
-  '/',
   '/about-us',
   '/products'
 ]

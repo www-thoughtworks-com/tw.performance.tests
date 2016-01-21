@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Graph of your results yo</title>
+  </head>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <script>
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawBasic);
+
+    var allData = %alldata%;
+
+    var getPath = function(url) {
+      return url.split('thoughtworks.com')[1];
+    };
+
+    function drawBasic() {
+			var urls = allData[0].data.map(function(row) {
+				return row.label;
+			});
+
+			var extractAverageForUrl = function(pipelineData, url) {
+				for(var x = 0; x < pipelineData.length; x++) {
+					var row = pipelineData[x];
+					if(row.label === url) { 
+						return row.avg;
+					}
+				};
+				return 0;
+			};
+
+			var graphData = allData.map(function(data) {
+				var pipelineLabel = data.label;
+				var pipelineData = data.data;
+		
+				var dataSet = [pipelineLabel];
+				urls.forEach(function(url) {
+					var average = extractAverageForUrl(pipelineData, url);
+					dataSet.push(average);
+				});
+
+				return dataSet;
+			});
+
+      var data = new google.visualization.DataTable();
+
+	    // Add the Urls
+      data.addColumn('string', 'go_label');
+	    urls.forEach(function(item) {
+      	data.addColumn('number', getPath(item));
+	    });
+
+	    // Add the data
+      data.addRows(graphData);
+
+      var options = {
+        hAxis: {
+          title: 'Pipeline Label'
+        },
+        vAxis: {
+          title: 'Average Time Taken (ms)'
+        }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+
+		  function resizeChart () {
+    	  chart.draw(data, options);
+		  }
+
+		  if (document.addEventListener) {
+    	  window.addEventListener('resize', resizeChart);
+		  }
+		  else if (document.attachEvent) {
+    	  window.attachEvent('onresize', resizeChart);
+		  }
+		  else {
+    	  window.resize = resizeChart;
+		  }
+    }
+
+  </script>
+  
+	<body>
+		<div id="chart_div" style="width: 100%; height: 100%;"></div>	
+	</body>
+</html>
