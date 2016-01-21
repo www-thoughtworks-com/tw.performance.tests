@@ -3,6 +3,16 @@ var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 100
 var mkdirp = require('mkdirp');
 var maxResponseTime = 3500;
 
+var lastRunData = [];
+
+try { 
+  var lastRun = fs.readdirSync(__dirname + '/results/average').reverse()[0];
+  lastRun = './results/average/' + lastRun;
+  lastRunData = JSON.parse(fs.readFileSync(lastRun, 'utf8'));
+} catch(ex) {
+  console.warn('WARNING: Unable to load last run data');
+}
+
 var paths = [
   ['/', maxResponseTime],
   ['/insights', maxResponseTime],
@@ -43,6 +53,17 @@ var validateMaximumAverageResponseTime = function(item, responseTime) {
   }
 };
 
+var validateVsLastRunData = function(item) {
+  var lastResult = lastRunData.find(function(a) { return a.label == item.label; });
+  if(lastResult) {
+    var avg = parseInt(item.avg);
+    var newMaximum = parseFloat(lastResult.avg) * 1.1; // 1.1 = 10% increase
+    if(avg > newMaximum) {
+      raiseError(item, 'Average response time (' + item.avg.toString() + 'ms) was more than 10% more than the previous response time (' + lastResult.avg + 'ms)');
+    }
+  }
+};
+
 for(var x = 0; x < paths.length; x++) {
   var path = paths[x][0];
   var responseTime = paths[x][1];
@@ -57,7 +78,7 @@ for(var x = 0; x < paths.length; x++) {
 
   validateStatusCodes(result);
   validateMaximumAverageResponseTime(result, responseTime);
-
+  validateVsLastRunData(result);
   results.push(result);
 }
 
