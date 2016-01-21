@@ -55,8 +55,11 @@ average.forEach(function(item) {
 	}
 });
 
+console.log('Saving results to file system...');
 mkdirp.sync('./results/average');
 mkdirp.sync('./results/max');
 
 fs.writeFileSync('./results/average/' + pipelineLabel + '_average.json', JSON.stringify(average));
 fs.writeFileSync('./results/max/' + pipelineLabel + '_max.json', JSON.stringify(max));
+
+console.log('Performance tests complete!');
