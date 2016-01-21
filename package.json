@@ -2,12 +2,12 @@
   "name": "perf",
   "description": "tw.com website performance tests",
   "dependencies": {
+    "async": "^1.5.2",
     "http-benchmark": "0.2.4",
     "mkdirp": "^0.5.1"
   },
   "scripts": {
-    "start": "node insights_performance_test.js > results.log",
-    "report": "node report_on_results.js results.log",
+    "report": "node insights_performance_test.js",
     "sync": "./sync.sh",
     "graph": "node graph_results.js",
     "all": "./do-it-all.sh"
