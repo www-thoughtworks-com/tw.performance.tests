@@ -28,7 +28,7 @@ var paths = [
   ['/careers/browse-jobs', 5000],
   ['/about-us', maxResponseTime],
   ['/contact-us', maxResponseTime],
-  ['/blogs', maxResponseTime],
+  ['/blogs', 4000],
   ['/sitemap-en.xml', maxResponseTime],
   ['/events', maxResponseTime], 
   // Other
