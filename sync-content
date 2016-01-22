@@ -13,7 +13,7 @@ if [ -d "./$FROM" ]; then
   cd $FROM
   git pull --rebase
   cd ..
-else 
+else
   git clone --depth=1 git@github.com:www-thoughtworks-com/$FROM.git
 fi
 
@@ -21,7 +21,7 @@ if [ -d "./$TO" ]; then
   cd $TO
   git pull --rebase
   cd ..
-else 
+else
   git clone --depth=1 git@github.com:www-thoughtworks-com/$TO.git
 fi
 
