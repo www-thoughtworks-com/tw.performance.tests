@@ -1,7 +1,7 @@
 var fs = require('fs')
 var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 1000);
 var mkdirp = require('mkdirp');
-var maxResponseTime = 3500;
+var maxResponseTime = 3000;
 
 var lastRunData = [];
 
@@ -22,7 +22,8 @@ var paths = [
   ['/careers', maxResponseTime],
   ['/events', 6000], // Events seems to average around 5500
   ['/about-us', maxResponseTime],
-  ['/products', maxResponseTime]
+  ['/products', maxResponseTime],
+  ['/services', maxResponseTime]
 ];
 
 var results = [];
