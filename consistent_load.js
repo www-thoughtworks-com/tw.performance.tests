@@ -20,7 +20,7 @@ var paths = [
   ['/clients', maxResponseTime],
   ['/services', maxResponseTime],
   ['/products', maxResponseTime],
-  ['/insights', maxResponseTime],
+  ['/insights', 4000],
   ['/insights/blogs?page=2', maxResponseTime],
   ['/insights/technology', maxResponseTime],
   ['/internal/api/insights/technology?page=2', maxResponseTime],
