@@ -25,7 +25,7 @@ var paths = [
   ['/insights/technology', maxResponseTime],
   ['/internal/api/insights/technology?page=2', maxResponseTime],
   ['/careers', maxResponseTime],
-  ['/careers/browse-jobs', maxResponseTime],
+  ['/careers/browse-jobs', 5000],
   ['/about-us', maxResponseTime],
   ['/contact-us', maxResponseTime],
   ['/blogs', maxResponseTime],
