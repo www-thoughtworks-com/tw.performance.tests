@@ -28,8 +28,9 @@ var paths = [
   ['/careers/browse-jobs', maxResponseTime],
   ['/about-us', maxResponseTime],
   ['/contact-us', maxResponseTime],
-  ['/events', 6000], // Events seems to average around 5500
-
+  ['/blogs', maxResponseTime],
+  ['/sitemap-en.xml', maxResponseTime],
+  ['/events', maxResponseTime], 
   // Other
   ['/radar', maxResponseTime],
   ['/radar/platforms', maxResponseTime],
