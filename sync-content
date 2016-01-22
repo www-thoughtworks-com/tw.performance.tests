@@ -1,0 +1,53 @@
+#!/bin/bash
+set +e
+FROM=$1
+TO=$2
+TYPE=$3
+
+if [ "$TYPE" == "" ]; then
+  echo "ERROR: Correct Use: ./sync-content <from> <to> <type>"
+  exit 1
+fi
+
+if [ -d "./$FROM" ]; then
+  pushd $FROM
+  git pull --rebase
+  popd
+else 
+  git clone --depth=1 git@github.com:www-thoughtworks-com/$FROM.git
+fi
+
+if [ -d "./$TO" ]; then
+  pushd $TO
+  git pull --rebase
+  popd
+else 
+  git clone --depth=1 git@github.com:www-thoughtworks-com/$TO.git
+fi
+
+echo Clearing Metadata from $TO
+rm -rf $TO/metadata/$TYPE
+
+echo Copying Metadata from $FROM to $TO
+cp -R $FROM/metadata/$TYPE $TO/metadata/$TYPE
+
+LOCALES=( en es cn pt de )
+for i in "${LOCALES[@]}"
+do
+  :
+  echo Clearing Public and Draft $TYPE from $TO for locale $i
+  rm -rf $TO/public/$i/$TYPE
+  rm -rf $TO/draft/$i/$TYPE
+
+  echo Copying Public and Draft $TYPE from $FROM to $TO
+  cp -R $FROM/public/$i/$TYPE $TO/public/$i/$TYPE
+  cp -R $FROM/draft/$i/$TYPE $TO/draft/$i/$TYPE
+done
+
+echo Committing to Git
+pushd $TO
+git add --all
+git commit -am "$USER - Syncing content from $FROM to $TO"
+git push origin master
+popd
+echo Content Synced!
