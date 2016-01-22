@@ -7,6 +7,6 @@ new Scenario()
   .get(base_url + path)
   .concurrency(3)
   .actions(50)
-  .throttle(200)
+  .throttle(10)
   .report()
   .start();
