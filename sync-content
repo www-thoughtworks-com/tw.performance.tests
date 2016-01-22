@@ -4,23 +4,23 @@ FROM=$1
 TO=$2
 TYPE=$3
 
-if [ "$TYPE" == "" ]; then
+if [ "$TYPE" = "" ]; then
   echo "ERROR: Correct Use: ./sync-content <from> <to> <type>"
   exit 1
 fi
 
 if [ -d "./$FROM" ]; then
-  pushd $FROM
+  cd $FROM
   git pull --rebase
-  popd
+  cd ..
 else 
   git clone --depth=1 git@github.com:www-thoughtworks-com/$FROM.git
 fi
 
 if [ -d "./$TO" ]; then
-  pushd $TO
+  cd $TO
   git pull --rebase
-  popd
+  cd ..
 else 
   git clone --depth=1 git@github.com:www-thoughtworks-com/$TO.git
 fi
@@ -45,9 +45,9 @@ do
 done
 
 echo Committing to Git
-pushd $TO
+cd $TO
 git add --all
 git commit -am "$USER - Syncing content from $FROM to $TO"
 git push origin master
-popd
+cd ..
 echo Content Synced!
