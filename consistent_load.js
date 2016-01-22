@@ -34,7 +34,7 @@ var paths = [
   // Other
   ['/radar', maxResponseTime],
   ['/radar/platforms', maxResponseTime],
-  ['/radar/a-z', maxResponseTime],
+  ['/radar/a-z', 5000],
   ['/profiles/martin-fowler', maxResponseTime] // A profile with insights
 ];
 
