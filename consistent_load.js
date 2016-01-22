@@ -34,6 +34,11 @@ var raiseError = function(item, msg) {
 	process.exit(1);
 }
 
+var raiseWarning = function(item, msg) {
+  console.warn('WARNING: ' + msg);
+  console.info('Target URL: ' + item.label);
+}
+
 var validateStatusCodes = function(item, msg) {
   var array = Object.keys(item.statuses);
 	var index = array.indexOf('200');
@@ -59,7 +64,7 @@ var validateVsLastRunData = function(item) {
     var avg = parseInt(item.avg);
     var newMaximum = parseFloat(lastResult.avg) * 1.1; // 1.1 = 10% increase
     if(avg > newMaximum) {
-      raiseError(item, 'Average response time (' + item.avg.toString() + 'ms) was more than 10% more than the previous response time (' + lastResult.avg + 'ms)');
+      raiseWarning(item, 'Average response time (' + item.avg.toString() + 'ms) was more than 10% more than the previous response time (' + lastResult.avg + 'ms)');
     }
   }
 };
