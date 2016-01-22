@@ -14,16 +14,27 @@ try {
 }
 
 var paths = [
+  // Top level
   ['/', maxResponseTime],
+  ['/es', maxResponseTime],
+  ['/clients', maxResponseTime],
+  ['/services', maxResponseTime],
+  ['/products', maxResponseTime],
   ['/insights', maxResponseTime],
+  ['/insights/blogs?page=2', maxResponseTime],
   ['/insights/technology', maxResponseTime],
+  ['/internal/api/insights/technology?page=2', maxResponseTime],
+  ['/careers', maxResponseTime],
+  ['/careers/browse-jobs', maxResponseTime],
+  ['/about-us', maxResponseTime],
+  ['/contact-us', maxResponseTime],
+  ['/events', 6000], // Events seems to average around 5500
+
+  // Other
   ['/radar', maxResponseTime],
   ['/radar/platforms', maxResponseTime],
-  ['/careers', maxResponseTime],
-  ['/events', 6000], // Events seems to average around 5500
-  ['/about-us', maxResponseTime],
-  ['/products', maxResponseTime],
-  ['/services', maxResponseTime]
+  ['/radar/a-z', maxResponseTime],
+  ['/profiles/martin-fowler', maxResponseTime] // A profile with insights
 ];
 
 var results = [];
