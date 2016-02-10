@@ -10,8 +10,14 @@
 
     var allData = %alldata%;
 
-    var getPath = function(url) {
-      return url.split('thoughtworks.com')[1];
+    var getLocation = function(href) {
+        var l = document.createElement("a");
+        l.href = href;
+        return l;
+    };
+
+    var getPath = function(uri) {
+      return getLocation(uri).pathname; 
     };
 
     function drawBasic() {
