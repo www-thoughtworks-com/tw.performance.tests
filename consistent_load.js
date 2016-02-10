@@ -39,7 +39,6 @@ var paths = [
 ];
 
 var results = [];
-console.log('Starting performance tests...');
 
 var raiseError = function(item, msg) {
   console.error('ERROR: ' + msg);
@@ -81,6 +80,12 @@ var validateVsLastRunData = function(item) {
     }
   }
 };
+
+console.log('Looking up test host...');
+process.env.TEST_URL=require('child_process').execSync("rake nodes | grep -i imageperf | grep -i $GO_PIPELINE_LABEL | awk '{print $1}'", { env: process.env }).toString().trim();
+process.env.TEST_URL = 'http://' + process.env.TEST_URL;
+console.log('Using ' + process.env.TEST_URL + ' as the target host');
+console.log('Starting performance tests...');
 
 for(var x = 0; x < paths.length; x++) {
   var path = paths[x][0];

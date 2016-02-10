@@ -1,5 +1,5 @@
 require('coffee-script')
-var Scenario = require('http-benchmark')
+var Scenario = require('http-benchmark');
 var base_url = process.env.TEST_URL || 'http://perf.webteam.thoughtworks.com';
 var path = process.argv[2];
 
