@@ -1,5 +1,5 @@
 GEM
-  remote: http://tw.performance.tests:mAk3MEdry@gems.webteam.thoughtworks.com/
+  remote: http://tw.performance.tests:@gems.webteam.thoughtworks.com/
   specs:
     CFPropertyList (2.3.2)
     annoy (0.5.6)
@@ -97,7 +97,7 @@ GEM
     fog-serverlove (0.1.2)
       fog-core
       fog-json
-    fog-softlayer (1.1.0)
+    fog-softlayer (1.0.3)
       fog-core
       fog-json
     fog-storm_on_demand (0.1.1)
@@ -167,8 +167,9 @@ GEM
       storable
     tilt (2.0.2)
     trollop (2.1.2)
-    tw-deployment (0.2.230)
+    tw-deployment (0.2.231)
       fog
+      fog-softlayer (< 1.1.0)
       rake (= 10.1.0)
       rye
       statsd-ruby
@@ -182,7 +183,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  tw-deployment (= 0.2.230)
+  tw-deployment (= 0.2.231)
 
 BUNDLED WITH
    1.10.6
