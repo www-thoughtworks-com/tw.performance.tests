@@ -16,7 +16,7 @@ try {
 var paths = [
   // Top level
   ['/', 3500],
-  ['/es', 5000],
+  ['/es', 6500],
   ['/clients', maxResponseTime],
   ['/services', maxResponseTime],
   ['/products', maxResponseTime],
