@@ -22,7 +22,7 @@ var paths = [
   ['/products', maxResponseTime],
   ['/insights', 10000],
   ['/insights/blogs?page=2', 3500],
-  ['/insights/technology', 4000],
+  ['/insights/technology', 20000],
   ['/api/v1/insights/technology?page=2', 4000],
   ['/careers', maxResponseTime],
   ['/careers/browse-jobs', 5000],
