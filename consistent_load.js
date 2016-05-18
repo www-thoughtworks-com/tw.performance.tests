@@ -35,7 +35,7 @@ var paths = [
   ['/radar', maxResponseTime],
   ['/radar/platforms', maxResponseTime],
   ['/radar/a-z', 5000],
-  ['/profiles/martin-fowler', maxResponseTime] // A profile with insights
+  ['/profiles/martin-fowler', 4000] // A profile with insights
 ];
 
 var results = [];
