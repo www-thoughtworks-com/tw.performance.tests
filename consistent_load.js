@@ -24,7 +24,7 @@ var paths = [
   ['/insights/blogs?page=2', 3500],
   ['/insights/technology', 20000],
   ['/api/v1/insights/technology?page=2', 8000],
-  ['/careers', 4000],
+  ['/careers', 6000],
   ['/careers/browse-jobs', 5000],
   ['/about-us', maxResponseTime],
   ['/contact-us', maxResponseTime],
