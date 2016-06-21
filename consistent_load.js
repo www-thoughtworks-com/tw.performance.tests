@@ -1,7 +1,7 @@
 var fs = require('fs')
 var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 1000);
 var mkdirp = require('mkdirp');
-var maxResponseTime = 3000;
+var maxResponseTime = 3500;
 
 var lastRunData = [];
 
@@ -14,27 +14,29 @@ try {
 }
 
 var paths = [
-  // Top level
-  ['/', 4000],
-  ['/es', 6500],
+  // DO NOT JUST INCREASE THESE BECAUSE THE BUILD GOES RED!
+  // Fix the performance issue.
+
+  ['/', 4000], // has insights
+  ['/es', 6000],  // has insights
   ['/clients', maxResponseTime],
   ['/services', maxResponseTime],
   ['/products', maxResponseTime],
-  ['/insights', 10000],
-  ['/insights/blogs?page=2', 3500],
-  ['/insights/technology', 20000],
-  ['/api/v1/insights/technology?page=2', 8000],
-  ['/careers', 7000],
-  ['/careers/browse-jobs', 5000],
+  ['/insights', 5000], // is insights
+  ['/insights/blogs?page=2', maxResponseTime], // is insights
+  ['/insights/technology', 5000], // is insights
+  ['/api/v1/insights/technology?page=2', 5000], // is insights
+  ['/careers', maxResponseTime],
+  ['/careers/browse-jobs', 5000], // greenhouse / avature 
   ['/about-us', maxResponseTime],
   ['/contact-us', maxResponseTime],
-  ['/blogs', 4000],
+  ['/blogs', maxResponseTime],
   ['/sitemap-en.xml', maxResponseTime],
   ['/events', maxResponseTime], 
   // Other
   ['/radar', maxResponseTime],
   ['/radar/platforms', maxResponseTime],
-  ['/radar/a-z', 5000],
+  ['/radar/a-z', 5000], // has insights
   ['/profiles/martin-fowler', 4000] // A profile with insights
 ];
 
