@@ -16,10 +16,10 @@ fi
 
 if [ "$DIRECTION" = "--down" ]; then
   echo 'Downloading previous average results...'
-  aws s3 cp s3://$BUCKET/average results/average --recursive
+  aws s3 cp s3://$BUCKET/average results/average --recursive --page-size 10
 
   echo 'Downloading previous max results...'
-  aws s3 cp s3://$BUCKET/max results/max --recursive
+  aws s3 cp s3://$BUCKET/max results/max --recursive --page-size 10
 
   echo 'Purging all but the last 50 results...'
   ls -p ./results/average | sort -r | grep -v '/$' | tail -n +51 | awk '{print "./results/average/"$1}' | xargs -n 1 rm

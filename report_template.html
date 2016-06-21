@@ -28,8 +28,9 @@
 			var extractAverageForUrl = function(pipelineData, url) {
 				for(var x = 0; x < pipelineData.length; x++) {
 					var row = pipelineData[x],
-              pathname = getPath(url);
-          if(row.label.indexOf(pathname) !== -1 ) {
+              pathname = getPath(url),
+              rowname = getPath(row.label);
+          if(pathname == rowname) {
             return row.avg;
 					}
 				};
@@ -45,7 +46,6 @@
 					var average = extractAverageForUrl(pipelineData, url);
 					dataSet.push(average);
 				});
-
 				return dataSet;
 			});
 
