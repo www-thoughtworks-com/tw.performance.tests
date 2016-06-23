@@ -1,9 +1,10 @@
 var fs = require('fs')
-var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 1000);
 var mkdirp = require('mkdirp');
-var maxResponseTime = 3500;
 
+var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 1000);
+var maxResponseTime = 3500;
 var lastRunData = [];
+var test_failed = false;
 
 try { 
   var lastRun = fs.readdirSync(__dirname + '/results/average').reverse()[0];
@@ -45,12 +46,13 @@ var results = [];
 var raiseError = function(item, msg) {
   console.error('ERROR: ' + msg);
   console.error('Target URL: ' + item.label);
-	process.exit(1);
+  test_failed = true
 }
 
 var raiseWarning = function(item, msg) {
   console.warn('WARNING: ' + msg);
   console.info('Target URL: ' + item.label);
+
 }
 
 var validateStatusCodes = function(item, msg) {
@@ -125,3 +127,7 @@ fs.writeFileSync('./results/average/' + pipelineLabel + '_average.json', JSON.st
 fs.writeFileSync('./results/max/' + pipelineLabel + '_max.json', JSON.stringify(max));
 
 console.log('Performance tests complete!');
+
+if(test_failed) {
+  process.exit(1);
+}
