@@ -8,3 +8,6 @@ results/
 npm-debug.log
 *.swp
 tw.*
+vendor/
+.DS_Store
+.bundle
