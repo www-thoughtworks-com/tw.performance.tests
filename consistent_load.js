@@ -86,7 +86,7 @@ var validateVsLastRunData = function(item) {
 };
 
 console.log('Looking up test host...');
-process.env.TEST_URL=require('child_process').execSync("bundle exec rake nodes | grep -i imageperf | grep -i $GO_PIPELINE_LABEL | awk '{print $1}'", { env: process.env }).toString().trim();
+process.env.TEST_URL=require('child_process').execSync("bundle exec rake nodes | grep -i $ENVIRONMENT | grep -i $GO_PIPELINE_LABEL | awk '{print $1}'", { env: process.env }).toString().trim();
 process.env.TEST_URL = 'http://' + process.env.TEST_URL;
 console.log('Using ' + process.env.TEST_URL + ' as the target host');
 console.log('Starting performance tests...');
