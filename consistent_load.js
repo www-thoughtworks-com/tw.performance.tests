@@ -6,7 +6,7 @@ var maxResponseTime = 3500;
 var lastRunData = [];
 var test_failed = false;
 var environment = require('child_process').execSync("echo $ENVIRONMENT").toString().trim(); 
-var env_url_map = {dev:'http://docker.webteam.thoughtworks.com', qa:'https://qa.thoughtworks.com', imageperf:"http://" + require('child_process').execSync("bundle exec rake nodes | grep -i $ENVIRONMENT | grep -i $GO_PIPELINE_LABEL | awk '{print $1}'", { env: process.env }).toString().trim()}
+var env_url_map = {dev:'http://docker.webteam.thoughtworks.com', qa:'https://www.qa.thoughtworks.com', imageperf:"http://" + require('child_process').execSync("bundle exec rake nodes | grep -i $ENVIRONMENT | grep -i $GO_PIPELINE_LABEL | awk '{print $1}'", { env: process.env }).toString().trim()}
 
 try { 
   var lastRun = fs.readdirSync(__dirname + '/results/average').reverse()[0];
