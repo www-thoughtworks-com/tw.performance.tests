@@ -46,6 +46,8 @@ var paths = [
 var results = [];
 
 var raiseError = function(item, msg) {
+  console.log('ERROR: ' + msg);
+  console.log('Target URL: ' + item.label);
   console.error('ERROR: ' + msg);
   console.error('Target URL: ' + item.label);
   test_failed = true
@@ -54,7 +56,6 @@ var raiseError = function(item, msg) {
 var raiseWarning = function(item, msg) {
   console.warn('WARNING: ' + msg);
   console.info('Target URL: ' + item.label);
-
 }
 
 var validateStatusCodes = function(item, msg) {
