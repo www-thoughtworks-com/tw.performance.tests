@@ -2,10 +2,9 @@
 set +e
 FROM=$1
 TO=$2
-TYPE=$3
 
-if [ "$TYPE" = "" ]; then
-  echo "ERROR: Correct Use: ./sync-content <from> <to> <type>"
+if [ $# -ne 2 ]; then
+  echo "ERROR: Correct Use: ./sync-content <from> <to>"
   exit 1
 fi
 
@@ -25,24 +24,23 @@ else
   git clone --depth=1 git@github.com:www-thoughtworks-com/$TO.git
 fi
 
-echo Clearing Metadata from $TO
-rm -rf $TO/metadata/$TYPE
+echo Clearing metadata from $TO
+rm -rf $TO/metadata
 
-echo Copying Metadata from $FROM to $TO
-cp -R $FROM/metadata/$TYPE $TO/metadata/$TYPE
+echo Clearing draft from $TO
+rm -rf $TO/draft
 
-LOCALES=( en es cn pt de )
-for i in "${LOCALES[@]}"
-do
-  :
-  echo Clearing Public and Draft $TYPE from $TO for locale $i
-  rm -rf $TO/public/$i/$TYPE
-  rm -rf $TO/draft/$i/$TYPE
+echo Clearing public from $TO
+rm -rf $TO/public
 
-  echo Copying Public and Draft $TYPE from $FROM to $TO
-  cp -R $FROM/public/$i/$TYPE $TO/public/$i/$TYPE
-  cp -R $FROM/draft/$i/$TYPE $TO/draft/$i/$TYPE
-done
+echo Copying metadata from $FROM to $TO
+cp -R $FROM/metadata $TO/metadata
+
+echo Copying draft from $FROM to $TO
+cp -R $FROM/draft $TO/draft
+
+echo Copying public from $FROM to $TO
+cp -R $FROM/public $TO/public
 
 echo Committing to Git
 cd $TO
