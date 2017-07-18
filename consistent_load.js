@@ -5,8 +5,8 @@ var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 100
 var maxResponseTime = 3500;
 var lastRunData = [];
 var test_failed = false;
-var environment = require('child_process').execSync("echo $ENVIRONMENT").toString().trim(); 
-var env_url_map = {dev:'http://docker.webteam.thoughtworks.com', qa:'https://www.qa.thoughtworks.com', imageperf:"http://" + require('child_process').execSync("bundle exec rake nodes | grep -i $ENVIRONMENT | grep -i $GO_PIPELINE_LABEL | awk '{print $1}'", { env: process.env }).toString().trim()}
+var target_host = process.env.TEST_HOST || 'perf.webteam.thoughtworks.com'
+var base_url = 'https://' + target_host
 
 try { 
   var lastRun = fs.readdirSync(__dirname + '/results/average').reverse()[0];
@@ -89,15 +89,14 @@ var validateVsLastRunData = function(item) {
 };
 
 console.log('Looking up test host...');
-process.env.TEST_URL=env_url_map[environment];
-console.log('Using ' + process.env.TEST_URL + ' as the target host');
+console.log('Using ' + target_host + ' as the target');
 console.log('Starting performance tests...');
 
 for(var x = 0; x < paths.length; x++) {
   var path = paths[x][0];
   var responseTime = paths[x][1];
   var cp = require('child_process');
-  var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + path, { env: process.env }); 
+  var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + (base_url + path));
   result = result.toString().split("\n");
   result = result[result.length -2];
   result = result.substring(3);
