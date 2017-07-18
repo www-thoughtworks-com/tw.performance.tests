@@ -11,9 +11,6 @@
     "syncDown": "sh sync --down",
     "syncUp": "sh sync --up",
     "graph": "node graph_results.js",
-    "syncProfiles": "sh sync-content tw.showcase.content tw.perf.content profiles",
-    "syncArticles": "sh sync-content tw.showcase.content tw.perf.content articles",
-    "syncNews": "sh sync-content tw.showcase.content tw.perf.content news",
     "all": "npm run syncDown && npm run report && npm run graph && npm run syncUp"
   }
 }
