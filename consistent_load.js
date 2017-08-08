@@ -19,32 +19,33 @@ try {
   console.warn('WARNING: Unable to load last run data');
 }
 
-var paths = [
+var pathResponseTime = {
   // DO NOT JUST INCREASE THESE BECAUSE THE BUILD GOES RED!
   // Fix the performance issue.
 
-  ['/', 4000], // has insights
-  ['/es', 6000],  // has insights
-  ['/clients', maxResponseTime],
-  ['/services', maxResponseTime],
-  ['/products', maxResponseTime],
-  ['/insights', 5000], // is insights
-  ['/insights/blogs?page=2', maxResponseTime], // is insights
-  ['/insights/technology', 5000], // is insights
-  ['/api/v1/insights/technology?page=2', 5000], // is insights
-  ['/careers', maxResponseTime],
-  ['/careers/browse-jobs', 5000], // greenhouse / avature
-  ['/about-us', maxResponseTime],
-  ['/contact-us', maxResponseTime],
-  ['/blogs', maxResponseTime],
-  ['/sitemap-en.xml', maxResponseTime],
-  ['/events', maxResponseTime],
+  '/': 4000, // has insights
+  '/es': 6000,  // has insights
+  '/clients': maxResponseTime,
+  '/services': maxResponseTime,
+  '/products': maxResponseTime,
+  '/insights': 5000, // is insights
+  '/insights/blogs?page=2': maxResponseTime, // is insights
+  '/insights/technology': 5000, // is insights
+  '/api/v1/insights/technology?page=2': 5000, // is insights
+  '/careers': maxResponseTime,
+  '/careers/browse-jobs': 5000, // greenhouse / avature
+  '/about-us': maxResponseTime,
+  '/contact-us': maxResponseTime,
+  '/blogs': maxResponseTime,
+  '/sitemap-en.xml': maxResponseTime,
+  '/events': maxResponseTime,
   // Other
-  ['/radar', maxResponseTime],
-  ['/radar/platforms', maxResponseTime],
-  ['/radar/a-z', 5000], // has insights
-  ['/profiles/martin-fowler', 4000] // A profile with insights
-];
+  '/radar': maxResponseTime,
+  '/radar/platforms': maxResponseTime,
+  '/radar/a-z': 5000, // has insights
+  '/profiles/martin-fowler': 4000 // A profile with insights
+};
+var paths = Object.keys(pathResponseTime);
 
 var raiseError = function(item, msg) {
   console.log('ERROR: ' + msg);
@@ -92,7 +93,7 @@ var validateVsLastRunData = function(item) {
 var generateRequests = function(callback) {
   var requests = paths.map(function(path) {
     var request = function(done) {
-      var url = baseUrl + path[0];
+      var url = baseUrl + path;
       https.get(url, function(res) {
         console.log(url + ': ' + res.statusCode);
         done();
@@ -118,9 +119,8 @@ var processRequests = function(requests, callback) {
 
 var runTests = function(callback) {
   console.log('Starting performance tests...');
-  for (var x = 0; x < paths.length; x++) {
-    var path = paths[x][0];
-    var responseTime = paths[x][1];
+  paths.forEach(function(path) {
+    var responseTime = pathResponseTime[path];
     var cp = require('child_process');
     var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + (baseUrl + path));
     result = result.toString().split("\n");
@@ -134,7 +134,7 @@ var runTests = function(callback) {
     validateMaximumAverageResponseTime(result, responseTime);
     validateVsLastRunData(result);
     results.push(result);
-  }
+  });
   callback();
 };
 
