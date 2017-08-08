@@ -7,9 +7,9 @@ var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 100
 var maxResponseTime = 3500;
 var lastRunData = [];
 var results = [];
-var test_failed = false;
-var target_host = process.env.TEST_HOST || 'perf.webteam.thoughtworks.com';
-var base_url = 'https://' + target_host;
+var testFailed = false;
+var targetHost = process.env.TEST_HOST || 'perf.webteam.thoughtworks.com';
+var baseUrl = 'https://' + targetHost;
 
 try {
   var lastRun = fs.readdirSync(__dirname + '/results/average').reverse()[0];
@@ -51,7 +51,7 @@ var raiseError = function(item, msg) {
   console.log('Target URL: ' + item.label);
   console.error('ERROR: ' + msg);
   console.error('Target URL: ' + item.label);
-  test_failed = true
+  testFailed = true
 };
 
 var raiseWarning = function(item, msg) {
@@ -92,7 +92,7 @@ var validateVsLastRunData = function(item) {
 var generateRequests = function(callback) {
   var requests = paths.map(function(path) {
     var request = function(done) {
-      var url = base_url + path[0];
+      var url = baseUrl + path[0];
       https.get(url, function(res) {
         console.log(url + ': ' + res.statusCode);
         done();
@@ -122,7 +122,7 @@ var runTests = function(callback) {
     var path = paths[x][0];
     var responseTime = paths[x][1];
     var cp = require('child_process');
-    var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + (base_url + path));
+    var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + (baseUrl + path));
     result = result.toString().split("\n");
     result = result[result.length - 2];
     result = result.substring(3);
@@ -161,12 +161,12 @@ var writeResults = function(callback) {
 };
 
 console.log('Looking up test host...');
-console.log('Using ' + target_host + ' as the target');
+console.log('Using ' + targetHost + ' as the target');
 
 async.waterfall([generateRequests, processRequests, runTests, writeResults], function() {
   console.log('Performance tests complete!');
 
-  if(test_failed) {
+  if(testFailed) {
     process.exit(1);
   }
 });
