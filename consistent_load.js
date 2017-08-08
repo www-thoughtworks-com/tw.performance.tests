@@ -1,5 +1,7 @@
 var fs = require('fs');
 var mkdirp = require('mkdirp');
+var https = require('https');
+var async = require('async');
 
 var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 1000);
 var maxResponseTime = 3500;
@@ -31,12 +33,12 @@ var paths = [
   ['/insights/technology', 5000], // is insights
   ['/api/v1/insights/technology?page=2', 5000], // is insights
   ['/careers', maxResponseTime],
-  ['/careers/browse-jobs', 5000], // greenhouse / avature 
+  ['/careers/browse-jobs', 5000], // greenhouse / avature
   ['/about-us', maxResponseTime],
   ['/contact-us', maxResponseTime],
   ['/blogs', maxResponseTime],
   ['/sitemap-en.xml', maxResponseTime],
-  ['/events', maxResponseTime], 
+  ['/events', maxResponseTime],
   // Other
   ['/radar', maxResponseTime],
   ['/radar/platforms', maxResponseTime],
@@ -87,7 +89,34 @@ var validateVsLastRunData = function(item) {
   }
 };
 
-var runTests = function() {
+var generateRequests = function(callback) {
+  var requests = paths.map(function(path) {
+    var request = function(done) {
+      var url = base_url + path[0];
+      https.get(url, function(res) {
+        console.log(url + ': ' + res.statusCode);
+        done();
+      });
+    }
+    return request;
+  });
+
+  callback(null, requests);
+}
+
+var processRequests = function(requests, callback) {
+  async.parallel(requests, function(error) {
+    if(error) {
+      console.error(error);
+    }
+    else {
+      console.log('Warmup done!');
+      callback();
+    }
+  });
+}
+
+var runTests = function(callback) {
   console.log('Starting performance tests...');
   for (var x = 0; x < paths.length; x++) {
     var path = paths[x][0];
@@ -106,16 +135,18 @@ var runTests = function() {
     validateVsLastRunData(result);
     results.push(result);
   }
+  callback();
 };
 
-var maxSorter = function (a, b) {
+var writeResults = function(callback) {
+  var maxSorter = function (a, b) {
     return b.max - a.max;
-};
-var averageSorter = function (a, b) {
-    return b.avg - a.avg;
-};
+  };
 
-var writeResults = function() {
+  var averageSorter = function (a, b) {
+      return b.avg - a.avg;
+  };
+
   console.log('Saving results to file system...');
   mkdirp.sync('./results/average');
   mkdirp.sync('./results/max');
@@ -125,20 +156,17 @@ var writeResults = function() {
 
   results.sort(maxSorter);
   fs.writeFileSync('./results/max/' + pipelineLabel + '_max.json', JSON.stringify(results));
+
+  callback();
 };
 
-var init = function() {
-  console.log('Looking up test host...');
-  console.log('Using ' + target_host + ' as the target');
+console.log('Looking up test host...');
+console.log('Using ' + target_host + ' as the target');
 
-  runTests();
-  writeResults();
-
+async.waterfall([generateRequests, processRequests, runTests, writeResults], function() {
   console.log('Performance tests complete!');
 
   if(test_failed) {
     process.exit(1);
   }
-};
-
-init();
+});
