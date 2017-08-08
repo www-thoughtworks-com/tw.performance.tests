@@ -1,14 +1,14 @@
-var fs = require('fs')
+var fs = require('fs');
 var mkdirp = require('mkdirp');
 
 var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 1000);
 var maxResponseTime = 3500;
 var lastRunData = [];
 var test_failed = false;
-var target_host = process.env.TEST_HOST || 'perf.webteam.thoughtworks.com'
-var base_url = 'https://' + target_host
+var target_host = process.env.TEST_HOST || 'perf.webteam.thoughtworks.com';
+var base_url = 'https://' + target_host;
 
-try { 
+try {
   var lastRun = fs.readdirSync(__dirname + '/results/average').reverse()[0];
   lastRun = './results/average/' + lastRun;
   lastRunData = JSON.parse(fs.readFileSync(lastRun, 'utf8'));
@@ -51,14 +51,14 @@ var raiseError = function(item, msg) {
   console.error('ERROR: ' + msg);
   console.error('Target URL: ' + item.label);
   test_failed = true
-}
+};
 
 var raiseWarning = function(item, msg) {
   console.warn('WARNING: ' + msg);
   console.info('Target URL: ' + item.label);
-}
+};
 
-var validateStatusCodes = function(item, msg) {
+var validateStatusCodes = function (item) {
   var array = Object.keys(item.statuses);
 	var index = array.indexOf('200');
 	if (index > -1) {
@@ -117,15 +117,15 @@ var averageSorter = function (a, b) {
     return b.avg - a.avg;
 };
 
-var average = results.sort(averageSorter);
-var max = results.sort(maxSorter);
-
 console.log('Saving results to file system...');
 mkdirp.sync('./results/average');
 mkdirp.sync('./results/max');
 
-fs.writeFileSync('./results/average/' + pipelineLabel + '_average.json', JSON.stringify(average));
-fs.writeFileSync('./results/max/' + pipelineLabel + '_max.json', JSON.stringify(max));
+results.sort(averageSorter);
+fs.writeFileSync('./results/average/' + pipelineLabel + '_average.json', JSON.stringify(results));
+
+results.sort(maxSorter);
+fs.writeFileSync('./results/max/' + pipelineLabel + '_max.json', JSON.stringify(results));
 
 console.log('Performance tests complete!');
 
