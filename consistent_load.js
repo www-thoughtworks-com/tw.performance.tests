@@ -4,6 +4,7 @@ var mkdirp = require('mkdirp');
 var pipelineLabel = process.env.GO_PIPELINE_LABEL || Math.floor(Date.now() / 1000);
 var maxResponseTime = 3500;
 var lastRunData = [];
+var results = [];
 var test_failed = false;
 var target_host = process.env.TEST_HOST || 'perf.webteam.thoughtworks.com';
 var base_url = 'https://' + target_host;
@@ -42,8 +43,6 @@ var paths = [
   ['/radar/a-z', 5000], // has insights
   ['/profiles/martin-fowler', 4000] // A profile with insights
 ];
-
-var results = [];
 
 var raiseError = function(item, msg) {
   console.log('ERROR: ' + msg);
@@ -88,27 +87,26 @@ var validateVsLastRunData = function(item) {
   }
 };
 
-console.log('Looking up test host...');
-console.log('Using ' + target_host + ' as the target');
-console.log('Starting performance tests...');
+var runTests = function() {
+  console.log('Starting performance tests...');
+  for (var x = 0; x < paths.length; x++) {
+    var path = paths[x][0];
+    var responseTime = paths[x][1];
+    var cp = require('child_process');
+    var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + (base_url + path));
+    result = result.toString().split("\n");
+    result = result[result.length - 2];
+    result = result.substring(3);
+    result = result.substring(0, result.length - 3);
+    result = JSON.parse(result);
+    console.log(result);
 
-for(var x = 0; x < paths.length; x++) {
-  var path = paths[x][0];
-  var responseTime = paths[x][1];
-  var cp = require('child_process');
-  var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + (base_url + path));
-  result = result.toString().split("\n");
-  result = result[result.length -2];
-  result = result.substring(3);
-  result = result.substring(0, result.length -3);
-  result = JSON.parse(result);
-  console.log(result);
-
-  validateStatusCodes(result);
-  validateMaximumAverageResponseTime(result, responseTime);
-  validateVsLastRunData(result);
-  results.push(result);
-}
+    validateStatusCodes(result);
+    validateMaximumAverageResponseTime(result, responseTime);
+    validateVsLastRunData(result);
+    results.push(result);
+  }
+};
 
 var maxSorter = function (a, b) {
     return b.max - a.max;
@@ -117,18 +115,30 @@ var averageSorter = function (a, b) {
     return b.avg - a.avg;
 };
 
-console.log('Saving results to file system...');
-mkdirp.sync('./results/average');
-mkdirp.sync('./results/max');
+var writeResults = function() {
+  console.log('Saving results to file system...');
+  mkdirp.sync('./results/average');
+  mkdirp.sync('./results/max');
 
-results.sort(averageSorter);
-fs.writeFileSync('./results/average/' + pipelineLabel + '_average.json', JSON.stringify(results));
+  results.sort(averageSorter);
+  fs.writeFileSync('./results/average/' + pipelineLabel + '_average.json', JSON.stringify(results));
 
-results.sort(maxSorter);
-fs.writeFileSync('./results/max/' + pipelineLabel + '_max.json', JSON.stringify(results));
+  results.sort(maxSorter);
+  fs.writeFileSync('./results/max/' + pipelineLabel + '_max.json', JSON.stringify(results));
+};
 
-console.log('Performance tests complete!');
+var init = function() {
+  console.log('Looking up test host...');
+  console.log('Using ' + target_host + ' as the target');
 
-if(test_failed) {
-  process.exit(1);
-}
+  runTests();
+  writeResults();
+
+  console.log('Performance tests complete!');
+
+  if(test_failed) {
+    process.exit(1);
+  }
+};
+
+init();
