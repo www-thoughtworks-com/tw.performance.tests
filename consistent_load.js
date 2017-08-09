@@ -8,6 +8,7 @@ var maxResponseTime = 3500;
 var lastRunData = [];
 var results = [];
 var testFailed = false;
+var verbose = false;
 var targetHost = process.env.TEST_HOST || 'perf.webteam.thoughtworks.com';
 var baseUrl = 'https://' + targetHost;
 
@@ -95,7 +96,7 @@ var generateRequests = function(callback) {
     var request = function(done) {
       var url = baseUrl + path;
       https.get(url, function(res) {
-        console.log(url + ': ' + res.statusCode);
+        verbose && console.log(url + ': ' + res.statusCode);
         done();
       });
     }
@@ -106,19 +107,19 @@ var generateRequests = function(callback) {
 }
 
 var processRequests = function(requests, callback) {
+  console.log('\nWarming up to cache the pages before running the tests...');
   async.parallel(requests, function(error) {
     if(error) {
       console.error(error);
     }
     else {
-      console.log('Warmup done!');
       callback();
     }
   });
 }
 
 var runTests = function(callback) {
-  console.log('Starting performance tests...');
+  console.log('\nStarting performance tests...');
   paths.forEach(function(path) {
     var responseTime = pathResponseTime[path];
     var cp = require('child_process');
@@ -128,7 +129,7 @@ var runTests = function(callback) {
     result = result.substring(3);
     result = result.substring(0, result.length - 3);
     result = JSON.parse(result);
-    console.log(result);
+    verbose && console.log(result);
 
     validateStatusCodes(result);
     validateMaximumAverageResponseTime(result, responseTime);
@@ -159,6 +160,10 @@ var writeResults = function(callback) {
 
   callback();
 };
+
+if(process.argv[2] === '--verbose' || process.argv[2] == '-v') {
+  verbose = true;
+}
 
 console.log('Looking up test host...');
 console.log('Using ' + targetHost + ' as the target');
