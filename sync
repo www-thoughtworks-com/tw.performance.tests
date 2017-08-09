@@ -8,18 +8,18 @@ aws s3api create-bucket --bucket $BUCKET --region us-east-1
 
 if [ "$DIRECTION" = "--up" ]; then
   echo 'Clearing the stuff currently in the bucket...'
-  aws s3 rm s3://$BUCKET/ --recursive
- 
+  aws s3 rm s3://$BUCKET/ --recursive --only-show-errors
+
   echo 'Uploading latest results...'
-  aws s3 cp results s3://$BUCKET --recursive
+  aws s3 cp results s3://$BUCKET --recursive --only-show-errors
 fi
 
 if [ "$DIRECTION" = "--down" ]; then
   echo 'Downloading previous average results...'
-  aws s3 cp s3://$BUCKET/average results/average --recursive --page-size 10
+  aws s3 cp s3://$BUCKET/average results/average --recursive --page-size 10 --only-show-errors
 
   echo 'Downloading previous max results...'
-  aws s3 cp s3://$BUCKET/max results/max --recursive --page-size 10
+  aws s3 cp s3://$BUCKET/max results/max --recursive --page-size 10 --only-show-errors
 
   echo 'Purging all but the last 50 results...'
   ls -p ./results/average | sort -r | grep -v '/$' | tail -n +51 | awk '{print "./results/average/"$1}' | xargs -r -n 1 rm

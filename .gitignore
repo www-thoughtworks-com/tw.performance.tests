@@ -11,3 +11,4 @@ tw.*
 vendor/
 .DS_Store
 .bundle
+.envrc
