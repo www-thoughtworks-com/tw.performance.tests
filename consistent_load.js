@@ -38,7 +38,6 @@ var pathResponseTime = {
   '/about-us': maxResponseTime,
   '/contact-us': maxResponseTime,
   '/blogs': maxResponseTime,
-  '/sitemap-en.xml': maxResponseTime,
   '/events': maxResponseTime,
   // Other
   '/radar': maxResponseTime,
