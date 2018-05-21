@@ -34,7 +34,7 @@ var pathResponseTime = {
   '/insights/technology': 5000, // is insights
   '/api/v1/insights/technology?page=2': 5000, // is insights
   '/careers': maxResponseTime,
-  '/careers/browse-jobs': 5000, // greenhouse / avature
+  '/careers/jobs': 5000, // greenhouse / avature
   '/about-us': maxResponseTime,
   '/contact-us': maxResponseTime,
   '/blogs': maxResponseTime,
