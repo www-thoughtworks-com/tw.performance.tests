@@ -9,7 +9,7 @@ var lastRunData = [];
 var results = [];
 var testFailed = false;
 var verbose = false;
-var targetHost = process.env.TEST_HOST || 'perf.webteam.thoughtworks.com';
+var targetHost = process.env.TEST_HOST || 'qa-gcp.webteam.thoughtworks.com';
 var baseUrl = 'https://' + targetHost;
 
 try {
