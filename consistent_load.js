@@ -37,7 +37,7 @@ var pathResponseTime = {
   '/careers/jobs': 5000, // greenhouse / avature
   '/about-us': maxResponseTime,
   '/contact-us': maxResponseTime,
-  '/blogs': maxResponseTime,
+  // '/blogs': maxResponseTime, #this page was not in redis cache, so it throws 500 err when concurrent initial request. But loads fine in normal browser.
   '/events': maxResponseTime,
   // Other
   '/radar': maxResponseTime,
