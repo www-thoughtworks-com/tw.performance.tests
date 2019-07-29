@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 DIRECTION=$1
-BUCKET=${GO_PIPELINE_NAME:-performance.dev}
+BUCKET="k8.image.performance"
 
 echo 'Ensuring bucket is created'
 aws s3api create-bucket --bucket $BUCKET --region us-east-1
