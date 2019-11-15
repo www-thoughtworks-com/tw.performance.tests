@@ -27,12 +27,12 @@ var pathResponseTime = {
   '/': 4000, // has insights
   '/es': 6000,  // has insights
   '/clients': maxResponseTime,
-  '/services': maxResponseTime,
-  '/products': maxResponseTime,
+  '/what-we-do': maxResponseTime,
+  '/what-we-do/products': maxResponseTime,
   '/insights': 5000, // is insights
-  '/insights/blogs?page=2': maxResponseTime, // is insights
-  '/insights/technology': 5000, // is insights
-  '/api/v1/insights/technology?page=2': 5000, // is insights
+  '/api/insights/blogs?page=2': maxResponseTime, // is insights
+  '/insights/technology-blogs': 5000, // is insights
+  '/internal/api/insights/technology-blogs?page=2': 5000, // is insights
   '/careers': maxResponseTime,
   '/careers/jobs': 5000, // greenhouse / avature
   '/about-us': maxResponseTime,
