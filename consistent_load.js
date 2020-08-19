@@ -124,9 +124,8 @@ var runTests = function(callback) {
     var cp = require('child_process');
     var result = cp.execSync('node ' + __dirname + '/consistent_load_url.js ' + (baseUrl + path));
     result = result.toString().split("\n");
-    result = result[result.length - 2];
-    result = result.substring(3);
-    result = result.substring(0, result.length - 3);
+    result = result[result.length - 3];
+    result=result.trim().slice(1, -1);
     result = JSON.parse(result);
     verbose && console.log(result);
 
